@@ -1,3 +1,7 @@
+-- Project Group 50
+-- Tyler Nguyen
+-- Nicholas Nguyen
+
 -- Disable foreign key checks and autocommit for clean import
 -- This ensures that tables can be dropped and recreated without integrity constraints interfering.
 SET FOREIGN_KEY_CHECKS=0;
