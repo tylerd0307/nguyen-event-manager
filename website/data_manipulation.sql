@@ -2,30 +2,28 @@
 -- Tyler Nguyen
 -- Nicholas Nguyen
 
--- : (colon) character denotes the variables that will have data from the backend programming language.
+-- The colon (:) character denotes variables that will be populated from the backend programming language.
 
------------------
--- Events Table
------------------
+--------------------------------
+-- EVENTS TABLE
+--------------------------------
 
 -- SELECT: Retrieve all events
--- This query fetches all event details, including associated venue and organizer IDs.
+-- Fetches all event details, including associated venue and organizer information.
 SELECT eventID, eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees 
 FROM Events;
 
--- SELECT: Retrieve a single event
--- Fetch details of a specific event using its unique eventID.
+-- SELECT: Retrieve a single event by its ID
 SELECT eventID, eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees 
 FROM Events 
 WHERE eventID = :eventID;
 
 -- INSERT: Create a new event
--- Adds a new event to the database with the provided details.
+-- Adds a new event with details such as name, date, venue, organizer, description, and attendee limits.
 INSERT INTO Events (eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees) 
 VALUES (:eventName, :eventDate, :venueID, :organizerID, :description, :requiresPayment, :maxAttendees);
 
--- UPDATE: Update an existing event
--- Modifies details of an existing event based on its eventID.
+-- UPDATE: Modify an existing event
 UPDATE Events 
 SET eventName = :eventName, 
     eventDate = :eventDate, 
@@ -36,26 +34,23 @@ SET eventName = :eventName,
     maxAttendees = :maxAttendees 
 WHERE eventID = :eventID;
 
--- DELETE: Delete an event
--- Removes an event from the database using its eventID.
+-- DELETE: Remove an event by its ID
 DELETE FROM Events WHERE eventID = :eventID;
 
 
--------------------
--- Attendees Table
--------------------
+--------------------------------
+-- ATTENDEES TABLE
+--------------------------------
 
 -- SELECT: Retrieve all attendees
 -- Fetches a list of all attendees along with their contact details.
 SELECT attendeeID, firstName, lastName, email, phoneNumber FROM Attendees;
 
--- INSERT: Create a new attendee
--- Adds a new attendee to the database with provided personal details.
+-- INSERT: Add a new attendee to the database
 INSERT INTO Attendees (firstName, lastName, email, phoneNumber) 
 VALUES (:firstName, :lastName, :email, :phoneNumber);
 
--- UPDATE: Update an attendee's details
--- Modifies an attendee’s information using their attendeeID.
+-- UPDATE: Modify an attendee’s details
 UPDATE Attendees 
 SET firstName = :firstName, 
     lastName = :lastName, 
@@ -63,26 +58,23 @@ SET firstName = :firstName,
     phoneNumber = :phoneNumber 
 WHERE attendeeID = :attendeeID;
 
--- DELETE: Delete an attendee
--- Removes an attendee from the database using their attendeeID.
+-- DELETE: Remove an attendee from the database
 DELETE FROM Attendees WHERE attendeeID = :attendeeID;
 
 
------------------
--- Venues Table
------------------
+--------------------------------
+-- VENUES TABLE
+--------------------------------
 
 -- SELECT: Retrieve all venues
--- Fetches all venue details, including capacity and contact information.
+-- Fetches venue details such as location, capacity, and contact number.
 SELECT venueID, venueName, address, capacity, contactNumber FROM Venues;
 
--- INSERT: Create a new venue
--- Adds a new venue to the database with specified attributes.
+-- INSERT: Add a new venue to the database
 INSERT INTO Venues (venueName, address, capacity, contactNumber) 
 VALUES (:venueName, :address, :capacity, :contactNumber);
 
--- UPDATE: Update a venue
--- Modifies venue details using its venueID.
+-- UPDATE: Modify venue details
 UPDATE Venues 
 SET venueName = :venueName, 
     address = :address, 
@@ -90,52 +82,46 @@ SET venueName = :venueName,
     contactNumber = :contactNumber 
 WHERE venueID = :venueID;
 
--- DELETE: Delete a venue
--- Removes a venue from the database using its venueID.
+-- DELETE: Remove a venue from the database
 DELETE FROM Venues WHERE venueID = :venueID;
 
 
---------------------
--- Organizers Table
---------------------
+--------------------------------
+-- ORGANIZERS TABLE
+--------------------------------
 
 -- SELECT: Retrieve all organizers
--- Fetches all organizers' details, including contact information.
+-- Fetches details of all event organizers, including their contact information.
 SELECT organizerID, organizerName, email, phoneNumber FROM Organizers;
 
--- INSERT: Create a new organizer
--- Adds a new organizer to the database.
+-- INSERT: Add a new organizer
 INSERT INTO Organizers (organizerName, email, phoneNumber) 
 VALUES (:organizerName, :email, :phoneNumber);
 
--- UPDATE: Update an organizer
--- Modifies an organizer’s details using their organizerID.
+-- UPDATE: Modify organizer details
 UPDATE Organizers 
 SET organizerName = :organizerName, 
     email = :email, 
     phoneNumber = :phoneNumber 
 WHERE organizerID = :organizerID;
 
--- DELETE: Delete an organizer
--- Removes an organizer from the database using their organizerID.
+-- DELETE: Remove an organizer from the database
 DELETE FROM Organizers WHERE organizerID = :organizerID;
 
 
--------------------
--- Payments Table
--------------------
+--------------------------------
+-- PAYMENTS TABLE
+--------------------------------
 
 -- SELECT: Retrieve all payments
--- Fetches all payment records, linking attendees with events.
+-- Fetches all payment records linking attendees to events.
 SELECT paymentID, eventID, attendeeID, paymentDate, paymentStatus FROM Payments;
 
--- INSERT: Create a new payment
--- Adds a new payment record associated with an event and an attendee.
+-- INSERT: Record a new payment
 INSERT INTO Payments (eventID, attendeeID, paymentDate, paymentStatus) 
 VALUES (:eventID, :attendeeID, :paymentDate, :paymentStatus);
 
--- UPDATE: Update a payment
--- Modifies an existing payment record.
+-- UPDATE: Modify an existing payment record
 UPDATE Payments 
 SET eventID = :eventID, 
     attendeeID = :attendeeID, 
@@ -143,36 +129,42 @@ SET eventID = :eventID,
     paymentStatus = :paymentStatus 
 WHERE paymentID = :paymentID;
 
--- DELETE: Delete a payment
--- Removes a payment record using its paymentID.
+-- DELETE: Remove a payment record
 DELETE FROM Payments WHERE paymentID = :paymentID;
 
 
-------------------------------
--- Attendees_Events Table
-------------------------------
+--------------------------------
+-- ATTENDEES_EVENTS TABLE (Many-to-Many Relationship)
+--------------------------------
+
+-- SELECT: Retrieve all attendee-event registrations
+-- Fetches a list of all attendees registered for events along with their registration status.
+SELECT registrationID, eventID, attendeeID, registrationStatus FROM Attendees_Events;
+
+-- SELECT: Retrieve all attendees for a specific event
+-- Fetches all attendees who are registered for a particular event.
+SELECT registrationID, attendeeID, registrationStatus 
+FROM Attendees_Events 
+WHERE eventID = :eventID;
+
+-- SELECT: Retrieve all events an attendee is registered for
+-- Fetches all events that a particular attendee has signed up for.
+SELECT registrationID, eventID, registrationStatus 
+FROM Attendees_Events 
+WHERE attendeeID = :attendeeID;
 
 -- INSERT: Register an attendee for an event
 -- Adds a new entry linking an attendee to an event with their registration status.
 INSERT INTO Attendees_Events (eventID, attendeeID, registrationStatus) 
 VALUES (:eventID, :attendeeID, :registrationStatus);
 
--- SELECT: Retrieve all registrations
--- Fetches all attendee-event relationships.
-SELECT * FROM Attendees_Events;
-
--- SELECT: Retrieve a specific registration
--- Fetches the registration record of a specific attendee for a specific event.
-SELECT * FROM Attendees_Events 
-WHERE eventID = :eventID AND attendeeID = :attendeeID;
-
--- UPDATE: Update an attendee's registration status
--- Modifies an attendee's registration status for an event.
+-- UPDATE: Change an attendee’s registration status
+-- Modifies the registration status of an attendee for a specific event.
 UPDATE Attendees_Events 
 SET registrationStatus = :registrationStatus 
 WHERE eventID = :eventID AND attendeeID = :attendeeID;
 
 -- DELETE: Remove an attendee from an event
--- Removes an attendee’s registration from an event.
+-- Deletes an attendee's registration for an event, effectively unregistering them.
 DELETE FROM Attendees_Events 
 WHERE eventID = :eventID AND attendeeID = :attendeeID;
