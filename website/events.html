@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Events</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <h1>Manage Events</h1>
+    <a href="index.html">Back to Home</a>
+
+    <h2>Browse Events</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Venue</th>
+            <th>Organizer</th>
+            <th>Actions</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Tech Conference</td>
+            <td>2024-04-01</td>
+            <td>Grand Hall</td>
+            <td>John Doe</td>
+            <td>
+                <a href="#">Edit</a> | <a href="#">Delete</a>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Add Event</h2>
+    <form>
+        <label>Event Name:</label> <input type="text" name="eventName"><br>
+        <label>Event Date:</label> <input type="date" name="eventDate"><br>
+        <label>Venue:</label> <input type="text" name="venue"><br>
+        <label>Organizer:</label> <input type="text" name="organizer"><br>
+        <input type="submit" value="Add Event">
+    </form>
+
+    <h2>Update Event</h2>
+    <form>
+        <label>Event ID:</label> <input type="text" name="eventID"><br>
+        <label>New Event Name:</label> <input type="text" name="newEventName"><br>
+        <label>New Event Date:</label> <input type="date" name="newEventDate"><br>
+        <label>New Venue:</label> <input type="text" name="newVenue"><br>
+        <label>New Organizer:</label> <input type="text" name="newOrganizer"><br>
+        <input type="submit" value="Update Event">
+    </form>
+
+    <h2>Delete Event</h2>
+    <form>
+        <label>Event ID:</label> <input type="text" name="deleteEventID"><br>
+        <input type="submit" value="Delete Event">
+    </form>
+</body>
+</html>
