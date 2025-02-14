@@ -8,111 +8,48 @@
     <h1>Manage Event Registrations</h1>
     <a href="index.html">Back to Home</a>
 
-    <h2>Browse Registrations</h2>
-    <table>
-        <tr>
-            <th>Event</th>
-            <th>Attendee</th>
-            <th>Registration Status</th>
-            <th>Actions</th>
-        </tr>
-        <tr>
-            <td>Tech Conference</td>
-            <td>Tyler Nguyen</td>
-            <td>Confirmed</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-        </tr>
-        <tr>
-            <td>Developer Workshop</td>
-            <td>Tyler Nguyen</td>
-            <td>Confirmed</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-        </tr>
-        <tr>
-            <td>Marketing Meetup</td>
-            <td>Alice Johnson</td>
-            <td>Pending</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-        </tr>
-        <tr>
-            <td>AI Symposium</td>
-            <td>Nicholas Nguyen</td>
-            <td>Pending</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-        </tr>
-    </table>
+    <div id="browseRegistrations">
+        <h2>Browse Event Registrations</h2>
+        <table border="1">
+            <tr>
+                <th>Event ID</th>
+                <th>Attendee ID</th>
+                <th>Registration Status</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>101</td>
+                <td>Registered</td>
+                <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            </tr>
+        </table>
+    </div>
 
-    <h2>Add Registration</h2>
-    <form>
-        <label>Event:</label>
-        <select name="event">
-            <option value="1">Tech Conference</option>
-            <option value="2">Marketing Meetup</option>
-            <option value="3">Developer Workshop</option>
-            <option value="4">AI Symposium</option>
-        </select><br>
+    <div id="addRegistration">
+        <h2>Add/Edit Event Registration</h2>
+        <form action="#" method="POST">
+            <label for="eventID">Event:</label>
+            <select id="eventID" name="eventID">
+                <option value="1">Tech Conference</option>
+                <option value="2">Music Festival</option>
+            </select>
 
-        <label>Attendee:</label>
-        <select name="attendee">
-            <option value="1">Tyler Nguyen</option>
-            <option value="2">Alice Johnson</option>
-            <option value="3">Nicholas Nguyen</option>
-        </select><br>
+            <label for="attendeeID">Attendee:</label>
+            <select id="attendeeID" name="attendeeID">
+                <option value="101">Tyler Nguyen</option>
+                <option value="102">Jane Doe</option>
+            </select>
 
-        <label>Registration Status:</label>
-        <select name="registrationStatus">
-            <option value="Confirmed">Confirmed</option>
-            <option value="Pending">Pending</option>
-        </select><br>
+            <label for="registrationStatus">Status:</label>
+            <select id="registrationStatus" name="registrationStatus">
+                <option value="Registered">Registered</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
 
-        <input type="submit" value="Add Registration">
-    </form>
-
-    <h2>Update Registration</h2>
-    <form>
-        <label>Event:</label>
-        <select name="event">
-            <option value="1">Tech Conference</option>
-            <option value="2">Marketing Meetup</option>
-            <option value="3">Developer Workshop</option>
-            <option value="4">AI Symposium</option>
-        </select><br>
-
-        <label>Attendee:</label>
-        <select name="attendee">
-            <option value="1">Tyler Nguyen</option>
-            <option value="2">Alice Johnson</option>
-            <option value="3">Nicholas Nguyen</option>
-        </select><br>
-
-        <label>New Registration Status:</label>
-        <select name="newRegistrationStatus">
-            <option value="Confirmed">Confirmed</option>
-            <option value="Pending">Pending</option>
-        </select><br>
-
-        <input type="submit" value="Update Registration">
-    </form>
-
-    <h2>Delete Registration</h2>
-    <form>
-        <label>Event:</label>
-        <select name="event">
-            <option value="1">Tech Conference</option>
-            <option value="2">Marketing Meetup</option>
-            <option value="3">Developer Workshop</option>
-            <option value="4">AI Symposium</option>
-        </select><br>
-
-        <label>Attendee:</label>
-        <select name="attendee">
-            <option value="1">Tyler Nguyen</option>
-            <option value="2">Alice Johnson</option>
-            <option value="3">Nicholas Nguyen</option>
-        </select><br>
-
-        <input type="submit" value="Delete Registration">
-    </form>
-
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

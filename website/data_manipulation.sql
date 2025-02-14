@@ -9,33 +9,31 @@
 --------------------------------
 
 -- SELECT: Retrieve all events
--- Fetches all event details, including associated venue and organizer information.
 SELECT eventID, eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees 
 FROM Events;
 
 -- SELECT: Retrieve a single event by its ID
 SELECT eventID, eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees 
 FROM Events 
-WHERE eventID = :eventID;
+WHERE eventID = :eventIDInput;
 
 -- INSERT: Create a new event
--- Adds a new event with details such as name, date, venue, organizer, description, and attendee limits.
 INSERT INTO Events (eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees) 
-VALUES (:eventName, :eventDate, :venueID, :organizerID, :description, :requiresPayment, :maxAttendees);
+VALUES (:eventNameInput, :eventDateInput, :venueIDInput, :organizerIDInput, :descriptionInput, :requiresPaymentInput, :maxAttendeesInput);
 
 -- UPDATE: Modify an existing event
 UPDATE Events 
-SET eventName = :eventName, 
-    eventDate = :eventDate, 
-    venueID = :venueID, 
-    organizerID = :organizerID, 
-    description = :description, 
-    requiresPayment = :requiresPayment, 
-    maxAttendees = :maxAttendees 
-WHERE eventID = :eventID;
+SET eventName = :eventNameInput, 
+    eventDate = :eventDateInput, 
+    venueID = :venueIDInput, 
+    organizerID = :organizerIDInput, 
+    description = :descriptionInput, 
+    requiresPayment = :requiresPaymentInput, 
+    maxAttendees = :maxAttendeesInput 
+WHERE eventID = :eventIDInput;
 
 -- DELETE: Remove an event by its ID
-DELETE FROM Events WHERE eventID = :eventID;
+DELETE FROM Events WHERE eventID = :eventIDInput;
 
 
 --------------------------------
@@ -43,23 +41,22 @@ DELETE FROM Events WHERE eventID = :eventID;
 --------------------------------
 
 -- SELECT: Retrieve all attendees
--- Fetches a list of all attendees along with their contact details.
 SELECT attendeeID, firstName, lastName, email, phoneNumber FROM Attendees;
 
--- INSERT: Add a new attendee to the database
+-- INSERT: Add a new attendee
 INSERT INTO Attendees (firstName, lastName, email, phoneNumber) 
-VALUES (:firstName, :lastName, :email, :phoneNumber);
+VALUES (:firstNameInput, :lastNameInput, :emailInput, :phoneNumberInput);
 
 -- UPDATE: Modify an attendee’s details
 UPDATE Attendees 
-SET firstName = :firstName, 
-    lastName = :lastName, 
-    email = :email, 
-    phoneNumber = :phoneNumber 
-WHERE attendeeID = :attendeeID;
+SET firstName = :firstNameInput, 
+    lastName = :lastNameInput, 
+    email = :emailInput, 
+    phoneNumber = :phoneNumberInput 
+WHERE attendeeID = :attendeeIDInput;
 
--- DELETE: Remove an attendee from the database
-DELETE FROM Attendees WHERE attendeeID = :attendeeID;
+-- DELETE: Remove an attendee
+DELETE FROM Attendees WHERE attendeeID = :attendeeIDInput;
 
 
 --------------------------------
@@ -67,23 +64,22 @@ DELETE FROM Attendees WHERE attendeeID = :attendeeID;
 --------------------------------
 
 -- SELECT: Retrieve all venues
--- Fetches venue details such as location, capacity, and contact number.
 SELECT venueID, venueName, address, capacity, contactNumber FROM Venues;
 
--- INSERT: Add a new venue to the database
+-- INSERT: Add a new venue
 INSERT INTO Venues (venueName, address, capacity, contactNumber) 
-VALUES (:venueName, :address, :capacity, :contactNumber);
+VALUES (:venueNameInput, :addressInput, :capacityInput, :contactNumberInput);
 
 -- UPDATE: Modify venue details
 UPDATE Venues 
-SET venueName = :venueName, 
-    address = :address, 
-    capacity = :capacity, 
-    contactNumber = :contactNumber 
-WHERE venueID = :venueID;
+SET venueName = :venueNameInput, 
+    address = :addressInput, 
+    capacity = :capacityInput, 
+    contactNumber = :contactNumberInput 
+WHERE venueID = :venueIDInput;
 
--- DELETE: Remove a venue from the database
-DELETE FROM Venues WHERE venueID = :venueID;
+-- DELETE: Remove a venue
+DELETE FROM Venues WHERE venueID = :venueIDInput;
 
 
 --------------------------------
@@ -91,22 +87,21 @@ DELETE FROM Venues WHERE venueID = :venueID;
 --------------------------------
 
 -- SELECT: Retrieve all organizers
--- Fetches details of all event organizers, including their contact information.
 SELECT organizerID, organizerName, email, phoneNumber FROM Organizers;
 
 -- INSERT: Add a new organizer
 INSERT INTO Organizers (organizerName, email, phoneNumber) 
-VALUES (:organizerName, :email, :phoneNumber);
+VALUES (:organizerNameInput, :emailInput, :phoneNumberInput);
 
 -- UPDATE: Modify organizer details
 UPDATE Organizers 
-SET organizerName = :organizerName, 
-    email = :email, 
-    phoneNumber = :phoneNumber 
-WHERE organizerID = :organizerID;
+SET organizerName = :organizerNameInput, 
+    email = :emailInput, 
+    phoneNumber = :phoneNumberInput 
+WHERE organizerID = :organizerIDInput;
 
--- DELETE: Remove an organizer from the database
-DELETE FROM Organizers WHERE organizerID = :organizerID;
+-- DELETE: Remove an organizer
+DELETE FROM Organizers WHERE organizerID = :organizerIDInput;
 
 
 --------------------------------
@@ -114,23 +109,22 @@ DELETE FROM Organizers WHERE organizerID = :organizerID;
 --------------------------------
 
 -- SELECT: Retrieve all payments
--- Fetches all payment records linking attendees to events.
 SELECT paymentID, eventID, attendeeID, paymentDate, paymentStatus FROM Payments;
 
 -- INSERT: Record a new payment
 INSERT INTO Payments (eventID, attendeeID, paymentDate, paymentStatus) 
-VALUES (:eventID, :attendeeID, :paymentDate, :paymentStatus);
+VALUES (:eventIDInput, :attendeeIDInput, :paymentDateInput, :paymentStatusInput);
 
 -- UPDATE: Modify an existing payment record
 UPDATE Payments 
-SET eventID = :eventID, 
-    attendeeID = :attendeeID, 
-    paymentDate = :paymentDate, 
-    paymentStatus = :paymentStatus 
-WHERE paymentID = :paymentID;
+SET eventID = :eventIDInput, 
+    attendeeID = :attendeeIDInput, 
+    paymentDate = :paymentDateInput, 
+    paymentStatus = :paymentStatusInput 
+WHERE paymentID = :paymentIDInput;
 
 -- DELETE: Remove a payment record
-DELETE FROM Payments WHERE paymentID = :paymentID;
+DELETE FROM Payments WHERE paymentID = :paymentIDInput;
 
 
 --------------------------------
@@ -138,33 +132,27 @@ DELETE FROM Payments WHERE paymentID = :paymentID;
 --------------------------------
 
 -- SELECT: Retrieve all attendee-event registrations
--- Fetches a list of all attendees registered for events along with their registration status.
 SELECT registrationID, eventID, attendeeID, registrationStatus FROM Attendees_Events;
 
 -- SELECT: Retrieve all attendees for a specific event
--- Fetches all attendees who are registered for a particular event.
 SELECT registrationID, attendeeID, registrationStatus 
 FROM Attendees_Events 
-WHERE eventID = :eventID;
+WHERE eventID = :eventIDInput;
 
 -- SELECT: Retrieve all events an attendee is registered for
--- Fetches all events that a particular attendee has signed up for.
 SELECT registrationID, eventID, registrationStatus 
 FROM Attendees_Events 
-WHERE attendeeID = :attendeeID;
+WHERE attendeeID = :attendeeIDInput;
 
 -- INSERT: Register an attendee for an event
--- Adds a new entry linking an attendee to an event with their registration status.
 INSERT INTO Attendees_Events (eventID, attendeeID, registrationStatus) 
-VALUES (:eventID, :attendeeID, :registrationStatus);
+VALUES (:eventIDInput, :attendeeIDInput, :registrationStatusInput);
 
 -- UPDATE: Change an attendee’s registration status
--- Modifies the registration status of an attendee for a specific event.
 UPDATE Attendees_Events 
-SET registrationStatus = :registrationStatus 
-WHERE eventID = :eventID AND attendeeID = :attendeeID;
+SET registrationStatus = :registrationStatusInput 
+WHERE eventID = :eventIDInput AND attendeeID = :attendeeIDInput;
 
 -- DELETE: Remove an attendee from an event
--- Deletes an attendee's registration for an event, effectively unregistering them.
 DELETE FROM Attendees_Events 
-WHERE eventID = :eventID AND attendeeID = :attendeeID;
+WHERE eventID = :eventIDInput AND attendeeID = :attendeeIDInput;
