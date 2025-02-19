@@ -26,6 +26,22 @@
             <td>Not Required</td>
             <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
         </tr>
+        <tr>
+            <td>2</td>
+            <td>Marketing Meetup</td>
+            <td>Alice Johnson</td>
+            <td>2024-04-02</td>
+            <td>Pending</td>
+            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Developer Workshop</td>
+            <td>Tyler Nguyen</td>
+            <td>2024-05-21</td>
+            <td>Paid</td>
+            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+        </tr>
     </table>
 
     <h2>Add Payment</h2>
@@ -42,6 +58,8 @@
         <label>Payment ID:</label>
         <select name="paymentID">
             <option value="1">Tech Conference (ID: 1)</option>
+            <option value="2">Marketing Meetup (ID: 2)</option>
+            <option value="3">Developer Workshop (ID: 3)</option>
         </select><br>
         <label>New Event:</label> <input type="text" name="newPaymentEvent"><br>
         <label>New Attendee:</label> <input type="text" name="newPaymentAttendee"><br>
@@ -55,6 +73,8 @@
         <label>Payment ID:</label>
         <select name="deletePaymentID">
             <option value="1">Tech Conference (ID: 1)</option>
+            <option value="2">Marketing Meetup (ID: 2)</option>
+            <option value="3">Developer Workshop (ID: 3)</option>
         </select><br>
         <input type="submit" value="Delete Payment">
     </form>
