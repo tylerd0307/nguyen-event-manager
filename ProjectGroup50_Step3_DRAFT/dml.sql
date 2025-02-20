@@ -8,34 +8,33 @@
 -- EVENTS TABLE
 --------------------------------
 
--- SELECT: Retrieve all events
-SELECT eventID, eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees 
-FROM Events;
+-- SELECT: Retrieve all events with venue and organizer names instead of just IDs
+SELECT e.eventID, e.eventName, e.eventDate, v.venueName, o.organizerName, e.description, e.requiresPayment, e.maxAttendees 
+FROM Events e
+JOIN Venues v ON e.venueID = v.venueID
+JOIN Organizers o ON e.organizerID = o.organizerID;
 
 -- SELECT: Retrieve a single event by its ID
-SELECT eventID, eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees 
-FROM Events 
-WHERE eventID = :eventIDInput;
+SELECT e.eventID, e.eventName, e.eventDate, v.venueName, o.organizerName, e.description, e.requiresPayment, e.maxAttendees 
+FROM Events e
+JOIN Venues v ON e.venueID = v.venueID
+JOIN Organizers o ON e.organizerID = o.organizerID
+WHERE e.eventID = :eventIDInput;
 
--- INSERT: Create a new event using venue and organizer names
+-- INSERT: Create a new event
 INSERT INTO Events (eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees) 
-SELECT :eventNameInput, :eventDateInput, v.venueID, o.organizerID, :descriptionInput, :requiresPaymentInput, :maxAttendeesInput
-FROM Venues v 
-JOIN Organizers o ON o.organizerName = :organizerNameInput
-WHERE v.venueName = :venueNameInput;
+VALUES (:eventNameInput, :eventDateInput, :venueIDInput, :organizerIDInput, :descriptionInput, :requiresPaymentInput, :maxAttendeesInput);
 
 -- UPDATE: Modify an existing event
-UPDATE Events e
-JOIN Venues v ON v.venueName = :venueNameInput
-JOIN Organizers o ON o.organizerName = :organizerNameInput
-SET e.eventName = :eventNameInput,
-    e.eventDate = :eventDateInput,
-    e.venueID = v.venueID,
-    e.organizerID = o.organizerID,
-    e.description = :descriptionInput,
-    e.requiresPayment = :requiresPaymentInput,
-    e.maxAttendees = :maxAttendeesInput
-WHERE e.eventID = :eventIDInput;
+UPDATE Events 
+SET eventName = :eventNameInput,
+    eventDate = :eventDateInput,
+    venueID = :venueIDInput,
+    organizerID = :organizerIDInput,
+    description = :descriptionInput,
+    requiresPayment = :requiresPaymentInput,
+    maxAttendees = :maxAttendeesInput
+WHERE eventID = :eventIDInput;
 
 -- DELETE: Remove an event by its ID (handling FK constraints)
 DELETE FROM Attendees_Events WHERE eventID = :eventIDInput;
@@ -48,6 +47,13 @@ DELETE FROM Events WHERE eventID = :eventIDInput;
 
 -- SELECT: Retrieve all attendees
 SELECT attendeeID, firstName, lastName, email, phoneNumber FROM Attendees;
+
+-- SELECT: Retrieve all events an attendee is registered for, displaying event names
+SELECT ae.attendeeID, a.firstName, a.lastName, e.eventName, ae.registrationStatus
+FROM Attendees_Events ae
+JOIN Attendees a ON ae.attendeeID = a.attendeeID
+JOIN Events e ON ae.eventID = e.eventID
+WHERE ae.attendeeID = :attendeeIDInput;
 
 -- INSERT: Add a new attendee
 INSERT INTO Attendees (firstName, lastName, email, phoneNumber) 
@@ -115,25 +121,23 @@ DELETE FROM Organizers WHERE organizerID = :organizerIDInput;
 -- PAYMENTS TABLE
 --------------------------------
 
--- SELECT: Retrieve all payments
-SELECT paymentID, eventID, attendeeID, paymentDate, paymentStatus FROM Payments;
+-- SELECT: Retrieve all payments with event and attendee names
+SELECT p.paymentID, e.eventName, a.firstName, a.lastName, p.paymentDate, p.paymentStatus
+FROM Payments p
+JOIN Events e ON p.eventID = e.eventID
+JOIN Attendees a ON p.attendeeID = a.attendeeID;
 
--- INSERT: Record a new payment using event and attendee names
+-- INSERT: Record a new payment
 INSERT INTO Payments (eventID, attendeeID, paymentDate, paymentStatus) 
-SELECT e.eventID, a.attendeeID, :paymentDateInput, :paymentStatusInput
-FROM Events e 
-JOIN Attendees a ON a.firstName = :firstNameInput AND a.lastName = :lastNameInput
-WHERE e.eventName = :eventNameInput;
+VALUES (:eventIDInput, :attendeeIDInput, :paymentDateInput, :paymentStatusInput);
 
 -- UPDATE: Modify an existing payment record
-UPDATE Payments p
-JOIN Events e ON e.eventName = :eventNameInput
-JOIN Attendees a ON a.firstName = :firstNameInput AND a.lastName = :lastNameInput
-SET p.eventID = e.eventID, 
-    p.attendeeID = a.attendeeID, 
-    p.paymentDate = :paymentDateInput, 
-    p.paymentStatus = :paymentStatusInput 
-WHERE p.paymentID = :paymentIDInput;
+UPDATE Payments 
+SET eventID = :eventIDInput, 
+    attendeeID = :attendeeIDInput, 
+    paymentDate = :paymentDateInput, 
+    paymentStatus = :paymentStatusInput 
+WHERE paymentID = :paymentIDInput;
 
 -- DELETE: Remove a payment record
 DELETE FROM Payments WHERE paymentID = :paymentIDInput;
@@ -142,35 +146,23 @@ DELETE FROM Payments WHERE paymentID = :paymentIDInput;
 -- ATTENDEES_EVENTS TABLE (Many-to-Many Relationship)
 --------------------------------
 
--- SELECT: Retrieve all attendee-event registrations
-SELECT registrationID, eventID, attendeeID, registrationStatus FROM Attendees_Events;
+-- SELECT: Retrieve all attendee-event registrations with names instead of IDs
+SELECT e.eventName, a.firstName, a.lastName, ae.registrationStatus
+FROM Attendees_Events ae
+JOIN Events e ON ae.eventID = e.eventID
+JOIN Attendees a ON ae.attendeeID = a.attendeeID;
 
--- SELECT: Retrieve all attendees for a specific event
-SELECT registrationID, attendeeID, registrationStatus 
-FROM Attendees_Events 
-WHERE eventID = :eventIDInput;
-
--- SELECT: Retrieve all events an attendee is registered for
-SELECT registrationID, eventID, registrationStatus 
-FROM Attendees_Events 
-WHERE attendeeID = :attendeeIDInput;
-
--- INSERT: Register an attendee for an event using names
+-- INSERT: Register an attendee for an event
 INSERT INTO Attendees_Events (eventID, attendeeID, registrationStatus) 
-SELECT e.eventID, a.attendeeID, :registrationStatusInput
-FROM Events e 
-JOIN Attendees a ON a.firstName = :firstNameInput AND a.lastName = :lastNameInput
-WHERE e.eventName = :eventNameInput;
+VALUES (:eventIDInput, :attendeeIDInput, :registrationStatusInput);
 
 -- UPDATE: Change an attendee’s registration status
-UPDATE Attendees_Events ae
-JOIN Events e ON e.eventName = :eventNameInput
-JOIN Attendees a ON a.firstName = :firstNameInput AND a.lastName = :lastNameInput
-SET ae.registrationStatus = :registrationStatusInput 
-WHERE ae.eventID = e.eventID 
-  AND ae.attendeeID = a.attendeeID;
+UPDATE Attendees_Events 
+SET registrationStatus = :registrationStatusInput 
+WHERE eventID = :eventIDInput 
+  AND attendeeID = :attendeeIDInput;
 
 -- DELETE: Remove an attendee from an event
 DELETE FROM Attendees_Events 
-WHERE eventID = (SELECT eventID FROM Events WHERE eventName = :eventNameInput) 
-  AND attendeeID = (SELECT attendeeID FROM Attendees WHERE firstName = :firstNameInput AND lastName = :lastNameInput);
+WHERE eventID = :eventIDInput 
+  AND attendeeID = :attendeeIDInput;
