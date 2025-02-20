@@ -21,16 +21,18 @@ JOIN Venues v ON e.venueID = v.venueID
 JOIN Organizers o ON e.organizerID = o.organizerID
 WHERE e.eventID = :eventIDInput;
 
--- INSERT: Create a new event
+-- INSERT: Create a new event using venue and organizer names instead of IDs
 INSERT INTO Events (eventName, eventDate, venueID, organizerID, description, requiresPayment, maxAttendees) 
-VALUES (:eventNameInput, :eventDateInput, :venueIDInput, :organizerIDInput, :descriptionInput, :requiresPaymentInput, :maxAttendeesInput);
+SELECT :eventNameInput, :eventDateInput, v.venueID, o.organizerID, :descriptionInput, :requiresPaymentInput, :maxAttendeesInput
+FROM Venues v, Organizers o
+WHERE v.venueName = :venueNameInput AND o.organizerName = :organizerNameInput;
 
--- UPDATE: Modify an existing event
+-- UPDATE: Modify an existing event using venue and organizer names
 UPDATE Events 
 SET eventName = :eventNameInput,
     eventDate = :eventDateInput,
-    venueID = :venueIDInput,
-    organizerID = :organizerIDInput,
+    venueID = (SELECT venueID FROM Venues WHERE venueName = :venueNameInput),
+    organizerID = (SELECT organizerID FROM Organizers WHERE organizerName = :organizerNameInput),
     description = :descriptionInput,
     requiresPayment = :requiresPaymentInput,
     maxAttendees = :maxAttendeesInput
@@ -127,14 +129,16 @@ FROM Payments p
 JOIN Events e ON p.eventID = e.eventID
 JOIN Attendees a ON p.attendeeID = a.attendeeID;
 
--- INSERT: Record a new payment
+-- INSERT: Record a new payment using event and attendee names
 INSERT INTO Payments (eventID, attendeeID, paymentDate, paymentStatus) 
-VALUES (:eventIDInput, :attendeeIDInput, :paymentDateInput, :paymentStatusInput);
+SELECT e.eventID, a.attendeeID, :paymentDateInput, :paymentStatusInput
+FROM Events e, Attendees a
+WHERE e.eventName = :eventNameInput AND a.firstName = :firstNameInput AND a.lastName = :lastNameInput;
 
 -- UPDATE: Modify an existing payment record
 UPDATE Payments 
-SET eventID = :eventIDInput, 
-    attendeeID = :attendeeIDInput, 
+SET eventID = (SELECT eventID FROM Events WHERE eventName = :eventNameInput),
+    attendeeID = (SELECT attendeeID FROM Attendees WHERE firstName = :firstNameInput AND lastName = :lastNameInput),
     paymentDate = :paymentDateInput, 
     paymentStatus = :paymentStatusInput 
 WHERE paymentID = :paymentIDInput;
@@ -152,17 +156,19 @@ FROM Attendees_Events ae
 JOIN Events e ON ae.eventID = e.eventID
 JOIN Attendees a ON ae.attendeeID = a.attendeeID;
 
--- INSERT: Register an attendee for an event
+-- INSERT: Register an attendee for an event using event and attendee names
 INSERT INTO Attendees_Events (eventID, attendeeID, registrationStatus) 
-VALUES (:eventIDInput, :attendeeIDInput, :registrationStatusInput);
+SELECT e.eventID, a.attendeeID, :registrationStatusInput
+FROM Events e, Attendees a
+WHERE e.eventName = :eventNameInput AND a.firstName = :firstNameInput AND a.lastName = :lastNameInput;
 
 -- UPDATE: Change an attendee’s registration status
 UPDATE Attendees_Events 
 SET registrationStatus = :registrationStatusInput 
-WHERE eventID = :eventIDInput 
-  AND attendeeID = :attendeeIDInput;
+WHERE eventID = (SELECT eventID FROM Events WHERE eventName = :eventNameInput)
+  AND attendeeID = (SELECT attendeeID FROM Attendees WHERE firstName = :firstNameInput AND lastName = :lastNameInput);
 
--- DELETE: Remove an attendee from an event
+-- DELETE: Remove an attendee from an event using event and attendee names
 DELETE FROM Attendees_Events 
-WHERE eventID = :eventIDInput 
-  AND attendeeID = :attendeeIDInput;
+WHERE eventID = (SELECT eventID FROM Events WHERE eventName = :eventNameInput)
+  AND attendeeID = (SELECT attendeeID FROM Attendees WHERE firstName = :firstNameInput AND lastName = :lastNameInput);
